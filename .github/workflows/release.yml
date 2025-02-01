@@ -42,27 +42,14 @@ jobs:
           make defconfig
           make package/luci-theme-design/compile V=s -j$(nproc)
           TARGET="$(find bin/ | grep  luci-theme-design)"
-          echo "TARGET=$(pwd)/$TARGET"
-          echo "TARGET=$(pwd)/$TARGET" >> $GITHUB_OUTPUT
+          mkdir -p out
+          mv "$TARGET" out/luci-theme-design_all.ipk
+          echo "TARGET=$(pwd)/out/luci-theme-design_all.ipk"
+          echo "TARGET=$(pwd)/out/luci-theme-design_all.ipk" >> $GITHUB_OUTPUT
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Get tag
-        id: tag
-        uses: dawidd6/action-get-tag@v1
+      - name: Upload files
+        uses: actions/upload-artifact@v3
         with:
-        # Optionally strip `v` prefix
-          strip_v: false
-
-      - name: Upload to release
-        uses: softprops/action-gh-release@v1
-        if: steps.build.outputs.status == 'success' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          name: ${{ steps.tag.outputs.tag }}
-          tag_name: ${{ steps.tag.outputs.tag }}
-          prerelease: false
-          generate_release_notes: true
-          files: |
-            ${{ steps.build.outputs.TARGET }}
-            LICENSE
+          name: luci-theme-design
+          path: out/luci-theme-design_all.ipk
