@@ -52,4 +52,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: luci-theme-design
-          path: out/luci-theme-design_all.ipk
+          path: /home/runner/work/luci-theme-design/luci-theme-design/openwrt-sdk/out/luci-theme-design_all.ipk
